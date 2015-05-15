@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun May 10 18:08:38 2015
+Created on Thu May 14 21:31:35 2015
 
-@author: Thomas
+@author: Maxime
 """
-
 import pygame
 import time
 
@@ -53,7 +52,41 @@ def rejoueOUquitte():
             continue
         return event.key
     return None
+import pygame, sys
+import pygame.locals
 
+
+def defilement():
+    pygame.init()
+ 
+    ecran = pygame.display.set_mode((1280, 720))
+
+    pygame.display.set_caption("")
+ 
+    clock = pygame.time.Clock()
+ 
+    background1 = pygame.image.load('fondflappy.png')
+    background2 = pygame.image.load('fondflappy.png')
+     
+    abscisse_background1 = 0
+    abscisse_background2 = background1.get_left()
+ 
+    while True:
+ 
+        ecran.blit(background1, (0, abscisse_background1))
+        ecran.blit(background2, (0,abscisse_background2))
+ 
+        pygame.display.update()
+ 
+        abscisse_background1 -= 1
+        abscisse_background2 -= 1
+    
+        if abscisse_background1 == -1 * background1.get_left():
+            abscisse_background1 =abscisse_background2 + background2.get_left()
+        if background2 == -1 * background2.get_left():
+            abscisse_fond2 = abscisse_background1 + background1.get_left()
+ 
+    clock.tick(60)
 
 
 def main(): 
