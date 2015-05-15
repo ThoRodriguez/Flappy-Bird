@@ -2,10 +2,11 @@
 """
 Created on Thu May 14 21:31:35 2015
 
-@author: Maxime
+@author: Thomas Rodriguez et Maxime Thibert
 """
 import pygame
 import time
+import random
 
 pygame.init()
 surfaceL = 800
@@ -20,7 +21,9 @@ def flappy(x,y,oiseau):
     
     surface.blit(oiseau,(x,y))
     
-
+def tuyaux(tuyau,x_tuyau,y_tuyau):
+    surface.blit(tuyau,(x_tuyau,y_tuyau))
+   
 
 
 def message(texte,surfaceL,surfaceH):
@@ -92,9 +95,13 @@ def defilement():
 def main(): 
     fond = pygame.image.load("fondflappy.png")
     oiseau = pygame.image.load("flappy2.png")
+    tuyau = pygame.image.load("tuyau.png")
     x = 150
     y = 200
     y_mouv = 0
+    x_tuyau = surfaceL
+    y_tuyau = random.randint(-380,-200)
+    tuyau_vitesse = 2
     game_over = False
     while (game_over == False) :  #quitter boucle inf
         for event in pygame.event.get(): #recherche parmi evenements
@@ -102,14 +109,20 @@ def main():
                 game_over = True 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    y_mouv = -10
+                    y_mouv = -5
             if event.type == pygame.KEYUP:
-                y_mouv = 3
+                y_mouv = 2
         y += y_mouv
         if y>surfaceH-5 or y <-5: #2 bords en hauteur
             message("Game over",surfaceL,surfaceH)
+        if x_tuyau < (0):
+            x_tuyau =  surfaceL
+            y_tuyau = random.randint(-380,-200)
         surface.blit(fond,(0,0))         
         flappy(x,y, oiseau)
+        tuyaux(tuyau,x_tuyau,y_tuyau)
+        x_tuyau -= tuyau_vitesse # bouge de 6 pixels
+        #defilement()
         pygame.display.update() #rafraichissement
         
         
