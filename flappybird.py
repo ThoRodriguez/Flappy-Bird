@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu May 14 21:31:35 2015
+Created on Sat May 16 01:57:21 2015
 
 @author: Thomas Rodriguez et Maxime Thibert
 """
+
 import pygame
 import time
 import random
@@ -25,7 +26,6 @@ def tuyaux(tuyau,x_tuyau,y_tuyau):
     surface.blit(tuyau,(x_tuyau,y_tuyau))
    
 
-
 def message(texte,surfaceL,surfaceH):
     gameover = pygame.font.Font("04b.ttf",140)
     gameoversurface, gameoverRect = creaTexte(texte, gameover) #contient 1 
@@ -41,9 +41,16 @@ def message(texte,surfaceL,surfaceH):
     
     
 def creaTexte(texte, police):
-    white = (255,255,255)
+    white = (255, 255, 255)
     textesurface = police.render(texte, True, white)
     return textesurface, textesurface.get_rect()
+
+
+def Score(score):
+    black = (0, 0, 0)    
+    font = pygame.font.Font(None ,50)
+    textesurface = font.render(("Score: "+str(score)), True, black)
+    surface.blit(textesurface, [0, 0])
 
 
 def rejoueOUquitte():
@@ -55,6 +62,7 @@ def rejoueOUquitte():
             continue
         return event.key
     return None
+
 import pygame, sys
 import pygame.locals
 
@@ -63,8 +71,6 @@ def defilement():
     pygame.init()
  
     ecran = pygame.display.set_mode((1280, 720))
-
-    pygame.display.set_caption("")
  
     clock = pygame.time.Clock()
  
@@ -87,7 +93,7 @@ def defilement():
         if abscisse_background1 == -1 * background1.get_left():
             abscisse_background1 =abscisse_background2 + background2.get_left()
         if background2 == -1 * background2.get_left():
-            abscisse_fond2 = abscisse_background1 + background1.get_left()
+            abscisse_background2 = abscisse_background1 + background1.get_left()
  
     clock.tick(60)
 
