@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat May 16 01:57:21 2015
+Created on Thu May 14 21:31:35 2015
 
 @author: Thomas Rodriguez et Maxime Thibert
 """
-
 import pygame
 import time
 import random
@@ -22,9 +21,14 @@ def flappy(x,y,oiseau):
     
     surface.blit(oiseau,(x,y))
     
-def tuyaux(tuyau,x_tuyau,y_tuyau):
+def tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau,ecart): #ecart : entre les nuages
     surface.blit(tuyau,(x_tuyau,y_tuyau))
-   
+    surface.blit (tuyau_bas,(x_tuyau,y_tuyau-y_tuyau+ecart)) #y_tuyau-y_tuyau+ecart a modifer
+
+def bord_defile(bord,x_bord,y_bord):
+    surface.blit(bord,(x_bord,y_bord))
+
+
 
 def message(texte,surfaceL,surfaceH):
     gameover = pygame.font.Font("04b.ttf",140)
@@ -41,16 +45,9 @@ def message(texte,surfaceL,surfaceH):
     
     
 def creaTexte(texte, police):
-    white = (255, 255, 255)
+    white = (255,255,255)
     textesurface = police.render(texte, True, white)
     return textesurface, textesurface.get_rect()
-
-
-def Score(score):
-    black = (0, 0, 0)    
-    font = pygame.font.Font(None ,50)
-    textesurface = font.render(("Score: "+str(score)), True, black)
-    surface.blit(textesurface, [0, 0])
 
 
 def rejoueOUquitte():
@@ -62,7 +59,6 @@ def rejoueOUquitte():
             continue
         return event.key
     return None
-
 import pygame, sys
 import pygame.locals
 
@@ -71,6 +67,8 @@ def defilement():
     pygame.init()
  
     ecran = pygame.display.set_mode((1280, 720))
+
+    pygame.display.set_caption("")
  
     clock = pygame.time.Clock()
  
@@ -93,21 +91,36 @@ def defilement():
         if abscisse_background1 == -1 * background1.get_left():
             abscisse_background1 =abscisse_background2 + background2.get_left()
         if background2 == -1 * background2.get_left():
-            abscisse_background2 = abscisse_background1 + background1.get_left()
+            abscisse_fond2 = abscisse_background1 + background1.get_left()
  
     clock.tick(60)
 
+
+def Score(score):
+    black = (0, 0, 0)    
+    font = pygame.font.Font(None ,50)
+    textesurface = font.render(("Score: "+str(score)), True, black)
+    surface.blit(textesurface, [0, 0])
+
+    
+    
 
 def main(): 
     fond = pygame.image.load("fondflappy.png")
     oiseau = pygame.image.load("flappy2.png")
     tuyau = pygame.image.load("tuyau.png")
+    bord = pygame.image.load("bord.png")
+    tuyau_bas =  pygame.transform.rotate(tuyau, 180)
     x = 150
     y = 200
     y_mouv = 0
     x_tuyau = surfaceL
     y_tuyau = random.randint(-380,-200)
+    ecart = 380
     tuyau_vitesse = 2
+    score = 0
+    x_bord = 16
+    y_bord = 470
     game_over = False
     while (game_over == False) :  #quitter boucle inf
         for event in pygame.event.get(): #recherche parmi evenements
@@ -126,9 +139,14 @@ def main():
             y_tuyau = random.randint(-380,-200)
         surface.blit(fond,(0,0))         
         flappy(x,y, oiseau)
-        tuyaux(tuyau,x_tuyau,y_tuyau)
+        tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau, ecart)
         x_tuyau -= tuyau_vitesse # bouge de 6 pixels
         #defilement()
+        Score(score)
+        if x_bord < -339 :
+            x_bord = 16
+        bord_defile(bord,x_bord,y_bord)
+        x_bord -= tuyau_vitesse
         pygame.display.update() #rafraichissement
         
         
