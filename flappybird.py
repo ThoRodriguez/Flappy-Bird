@@ -3,6 +3,8 @@
 Created on Thu May 14 21:31:35 2015
 
 @author: Thomas Rodriguez et Maxime Thibert
+
+Demander pour les nombreux if (elif ?) et nombreuses variables ds fonction main
 """
 import pygame
 import time
@@ -21,9 +23,9 @@ def flappy(x,y,oiseau):
     
     surface.blit(oiseau,(x,y))
     
-def tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau,ecart): #ecart : entre les nuages
+def tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau,ecart): 
     surface.blit(tuyau,(x_tuyau,y_tuyau))
-    surface.blit (tuyau_bas,(x_tuyau,y_tuyau-y_tuyau+ecart)) #y_tuyau-y_tuyau+ecart a modifer
+    surface.blit (tuyau_bas,(x_tuyau,y_tuyau+509+ecart)) #509 = taille tuyau
 
 def bord_defile(bord,x_bord,y_bord):
     surface.blit(bord,(x_bord,y_bord))
@@ -111,12 +113,14 @@ def main():
     tuyau = pygame.image.load("tuyau.png")
     bord = pygame.image.load("bord.png")
     tuyau_bas =  pygame.transform.rotate(tuyau, 180)
+    x_flappy = 68
+    y_flappy = 50
     x = 150
     y = 200
     y_mouv = 0
     x_tuyau = surfaceL
-    y_tuyau = random.randint(-380,-200)
-    ecart = 380
+    y_tuyau = random.randint(-400,-280)
+    ecart = 3*y_flappy
     tuyau_vitesse = 2
     score = 0
     x_bord = 16
@@ -134,9 +138,10 @@ def main():
         y += y_mouv
         if y>surfaceH-5 or y <-5: #2 bords en hauteur
             message("Game over",surfaceL,surfaceH)
+        
         if x_tuyau < (0):
             x_tuyau =  surfaceL
-            y_tuyau = random.randint(-380,-200)
+            y_tuyau = random.randint(-400,-280)
         surface.blit(fond,(0,0))         
         flappy(x,y, oiseau)
         tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau, ecart)
