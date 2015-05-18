@@ -4,7 +4,6 @@ Created on Thu May 14 21:31:35 2015
 
 @author: Thomas Rodriguez et Maxime Thibert
 
-Demander pour les nombreux if (elif ?) et nombreuses variables ds fonction main
 """
 import pygame
 import time
@@ -20,30 +19,31 @@ horloge = pygame.time.Clock()
 
 
 def flappy(x,y,oiseau):
-    
+
     surface.blit(oiseau,(x,y))
-    
+
+
 def tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau,ecart): 
     surface.blit(tuyau,(x_tuyau,y_tuyau))
-    surface.blit (tuyau_bas,(x_tuyau,y_tuyau+509+ecart)) #509 = taille tuyau
+    surface.blit (tuyau_bas,(x_tuyau,y_tuyau+509+ecart)) #509pix = taille tuyau
+
 
 def bord_defile(bord,x_bord,y_bord):
     surface.blit(bord,(x_bord,y_bord))
 
 
-
-def message(texte,surfaceL,surfaceH):
+def message(texte,surfaceL,surfaceH,son_gameover):
     gameover = pygame.font.Font("04b.ttf",140)
     gameoversurface, gameoverRect = creaTexte(texte, gameover) #contient 1 
                                                            #texte et 1 police
     gameoverRect.center = surfaceL/2, (surfaceH/2)-50
     surface.blit(gameoversurface, gameoverRect)
-    
+    son_gameover.play()
     pygame.display.update()
     time.sleep(2)
     while rejoueOUquitte() == None:   #tant que RoQ renvoie a rien
         horloge.tick()              #bloque tout
-    main()
+
     
     
 def creaTexte(texte, police):
@@ -61,65 +61,28 @@ def rejoueOUquitte():
             continue
         return event.key
     return None
-import pygame, sys
-import pygame.locals
 
 
-	HEAD
 def Score(score,x_tuyau):
     black = (0, 0, 0)    
     font = pygame.font.Font(None ,50)
-    textesurface = font.render(("Score: "+str(score)), True, black)
-    surface.blit(textesurface, [0, 0])
-
-def defilement():
-    pygame.init()
- 
-    ecran = pygame.display.set_mode((1280, 720))
-
-    pygame.display.set_caption("")
- 
-    clock = pygame.time.Clock()
- 
-    background1 = pygame.image.load('fondflappy.png')
-    background2 = pygame.image.load('fondflappy.png')
-     
-    abscisse_background1 = 0
-    abscisse_background2 = background1.get_left()
- 
-    while True:
- 
-        ecran.blit(background1, (0, abscisse_background1))
-        ecran.blit(background2, (0,abscisse_background2))
- 
-        pygame.display.update()
- 
-        abscisse_background1 -= 1
-        abscisse_background2 -= 1
-    
-        if abscisse_background1 == -1 * background1.get_left():
-            abscisse_background1 =abscisse_background2 + background2.get_left()
-        if background2 == -1 * background2.get_left():
-            abscisse_fond2 = abscisse_background1 + background1.get_left()
- 
-    clock.tick(60)
->>>>>>> origin/master
-
-    
-def collision(xf,yf,xt,yt,ecart):
-    if xf > xt-135 and xf < xt+75 and (yf >= yt+509 or yf <= yt+509+ecart):
-        message("Game over",surfaceL,surfaceH)
-    
-    
-
-def Score(score):
-    black = (0, 0, 0)    
-    font = pygame.font.Font(None ,50)
-    textesurface = font.render(("Score: "+str(score)), True, black)
+    textesurface = font.render(("Score: "+str(score)), True, black) 
+    #conversion en string pr concatener
     surface.blit(textesurface, [0, 0])
 
     
+def collision(x,y,xf,yf,xt,yt,ecart,son_gameover):
+    if x + xf > xt+20:
+        if y < yt + 509-20:
+            if x-xf < xt + 150-20:
+                message("Game over",surfaceL,surfaceH,son_gameover)
+
     
+    if x + xf > xt+20:
+        if y + yf > yt + 509+ecart+20:
+            if x-xf < xt + 150-20:
+                message("Game over",surfaceL,surfaceH,son_gameover)
+
 
 def main(): 
     fond = pygame.image.load("fondflappy.png")
@@ -139,6 +102,9 @@ def main():
     score = 0
     x_bord = 16
     y_bord = 470
+    son_saut = pygame.mixer.Sound("saut.wav")
+    son_tuyau = pygame.mixer.Sound("tuyau.wav")
+    son_gameover = pygame.mixer.Sound("gameover.wav")
     game_over = False
     while (game_over == False) :  #quitter boucle inf
         for event in pygame.event.get(): #recherche parmi evenements
@@ -146,36 +112,32 @@ def main():
                 game_over = True 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
+                    son_saut.play()
                     y_mouv = -5
+                    
             if event.type == pygame.KEYUP:
-                y_mouv = 2
+                y_mouv = 3
         y += y_mouv
-        if y>surfaceH-5 or y <-5: #2 bords en hauteur
-            message("Game over",surfaceL,surfaceH)
+        if y>surfaceH-75 or y <-5: #2 bords en hauteur
+            message("Game over",surfaceL,surfaceH,son_gameover)
         
         if x_tuyau < (0):
             x_tuyau =  surfaceL
             y_tuyau = random.randint(-400,-280)
-	HEAD
             score +=1
-            if score >= 2:
+            if score >= 3:
                 ecart = 2*y_flappy
                 tuyau_vitesse = score
                 if score >= 10:
                     tuyau_vitesse = 10
-                
-	origin/master
+        if x_tuyau == x:
+            son_tuyau.play()
         surface.blit(fond,(0,0))         
         flappy(x,y, oiseau)
         tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau, ecart)
         x_tuyau -= tuyau_vitesse # bouge de 6 pixels
-	HEAD
         Score(score,x_tuyau)
-        #collision(x_flappy,y_flappy,x_tuyau,y_tuyau,ecart)
-
-        #defilement()
-        Score(score)
-	origin/master
+        collision(x,y,x_flappy,y_flappy,x_tuyau,y_tuyau,ecart,son_gameover)
         if x_bord < -339 :
             x_bord = 16
         bord_defile(bord,x_bord,y_bord)
