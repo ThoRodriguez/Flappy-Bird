@@ -26,7 +26,10 @@ def flappy(x,y,oiseau):
 def tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau,ecart): 
     surface.blit(tuyau,(x_tuyau,y_tuyau))
     surface.blit (tuyau_bas,(x_tuyau,y_tuyau+509+ecart)) #509pix = taille tuyau
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
 
 def bord_defile(bord,x_bord,y_bord):
     surface.blit(bord,(x_bord,y_bord))
@@ -71,18 +74,30 @@ def Score(score,x_tuyau):
     surface.blit(textesurface, [0, 0])
 
     
+<<<<<<< HEAD
 def collision(x,y,xf,yf,xt,yt,ecart,son_gameover):
     if x + xf > xt+20:
         if y < yt + 509-20:
             if x-xf < xt + 150-20:
                 message("Game over",surfaceL,surfaceH,son_gameover)
 
+=======
+def collision(x,y,xf,yf,xt,yt,ecart):
+    if x + xf > xt+20:
+        if y < yt + 509-20:
+            if x-xf < xt + 150-20:
+                message("Game over",surfaceL,surfaceH)
+>>>>>>> origin/master
     
     if x + xf > xt+20:
         if y + yf > yt + 509+ecart+20:
             if x-xf < xt + 150-20:
+<<<<<<< HEAD
                 message("Game over",surfaceL,surfaceH,son_gameover)
 
+=======
+                message("Game over",surfaceL,surfaceH)
+>>>>>>> origin/master
 
 def main(): 
     fond = pygame.image.load("fondflappy.png")
@@ -119,7 +134,11 @@ def main():
                 y_mouv = 3
         y += y_mouv
         if y>surfaceH-75 or y <-5: #2 bords en hauteur
+<<<<<<< HEAD
             message("Game over",surfaceL,surfaceH,son_gameover)
+=======
+            message("Game over",surfaceL,surfaceH)
+>>>>>>> origin/master
         
         if x_tuyau < (0):
             x_tuyau =  surfaceL
@@ -130,14 +149,22 @@ def main():
                 tuyau_vitesse = score
                 if score >= 10:
                     tuyau_vitesse = 10
+<<<<<<< HEAD
         if x_tuyau == x:
             son_tuyau.play()
+=======
+                
+>>>>>>> origin/master
         surface.blit(fond,(0,0))         
         flappy(x,y, oiseau)
         tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau, ecart)
         x_tuyau -= tuyau_vitesse # bouge de 6 pixels
         Score(score,x_tuyau)
+<<<<<<< HEAD
         collision(x,y,x_flappy,y_flappy,x_tuyau,y_tuyau,ecart,son_gameover)
+=======
+        collision(x,y,x_flappy,y_flappy,x_tuyau,y_tuyau,ecart)
+>>>>>>> origin/master
         if x_bord < -339 :
             x_bord = 16
         bord_defile(bord,x_bord,y_bord)
