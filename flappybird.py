@@ -24,7 +24,7 @@ def flappy(x,y,oiseau):
     
 def tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau,ecart): 
     surface.blit(tuyau,(x_tuyau,y_tuyau))
-    surface.blit (tuyau_bas,(x_tuyau,y_tuyau+509+ecart)) #509 = taille tuyau
+    surface.blit (tuyau_bas,(x_tuyau,y_tuyau+509+ecart)) #509pix = taille tuyau
 
 def bord_defile(bord,x_bord,y_bord):
     surface.blit(bord,(x_bord,y_bord))
