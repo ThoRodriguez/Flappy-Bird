@@ -65,16 +65,59 @@ import pygame, sys
 import pygame.locals
 
 
+	HEAD
 def Score(score,x_tuyau):
     black = (0, 0, 0)    
     font = pygame.font.Font(None ,50)
     textesurface = font.render(("Score: "+str(score)), True, black)
     surface.blit(textesurface, [0, 0])
 
+def defilement():
+    pygame.init()
+ 
+    ecran = pygame.display.set_mode((1280, 720))
+
+    pygame.display.set_caption("")
+ 
+    clock = pygame.time.Clock()
+ 
+    background1 = pygame.image.load('fondflappy.png')
+    background2 = pygame.image.load('fondflappy.png')
+     
+    abscisse_background1 = 0
+    abscisse_background2 = background1.get_left()
+ 
+    while True:
+ 
+        ecran.blit(background1, (0, abscisse_background1))
+        ecran.blit(background2, (0,abscisse_background2))
+ 
+        pygame.display.update()
+ 
+        abscisse_background1 -= 1
+        abscisse_background2 -= 1
+    
+        if abscisse_background1 == -1 * background1.get_left():
+            abscisse_background1 =abscisse_background2 + background2.get_left()
+        if background2 == -1 * background2.get_left():
+            abscisse_fond2 = abscisse_background1 + background1.get_left()
+ 
+    clock.tick(60)
+>>>>>>> origin/master
+
     
 def collision(xf,yf,xt,yt,ecart):
     if xf > xt-135 and xf < xt+75 and (yf >= yt+509 or yf <= yt+509+ecart):
         message("Game over",surfaceL,surfaceH)
+    
+    
+
+def Score(score):
+    black = (0, 0, 0)    
+    font = pygame.font.Font(None ,50)
+    textesurface = font.render(("Score: "+str(score)), True, black)
+    surface.blit(textesurface, [0, 0])
+
     
     
 
@@ -113,6 +156,7 @@ def main():
         if x_tuyau < (0):
             x_tuyau =  surfaceL
             y_tuyau = random.randint(-400,-280)
+	HEAD
             score +=1
             if score >= 2:
                 ecart = 2*y_flappy
@@ -120,12 +164,18 @@ def main():
                 if score >= 10:
                     tuyau_vitesse = 10
                 
+	origin/master
         surface.blit(fond,(0,0))         
         flappy(x,y, oiseau)
         tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau, ecart)
         x_tuyau -= tuyau_vitesse # bouge de 6 pixels
+	HEAD
         Score(score,x_tuyau)
         #collision(x_flappy,y_flappy,x_tuyau,y_tuyau,ecart)
+
+        #defilement()
+        Score(score)
+	origin/master
         if x_bord < -339 :
             x_bord = 16
         bord_defile(bord,x_bord,y_bord)
