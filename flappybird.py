@@ -20,7 +20,7 @@ horloge = pygame.time.Clock()
 
 def flappy(x,y,oiseau, rotate):
 
-    oiseau = pygame.transform.rotate(oiseau, rotate)
+    oiseau = pygame.transform.rotate(oiseau, rotate) # on effectue une rotation sur l'image du joueur
     surface.blit(oiseau,(x,y))
 
 
@@ -59,15 +59,19 @@ def rejoueQuit():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE: # Si espace : rejouer
                 main()
 
-def Score(score,x_tuyau):
+def Score(score,x_tuyau,x,son):
     black = (0, 0, 0)    
     font = pygame.font.Font(None ,50)
     textesurface = font.render(("Score: "+str(score)), True, black) 
     #conversion en string pr concatener
     surface.blit(textesurface, [0, 0])
+    if x_tuyau == x:
+        son.play()
+        score +=1
+    return score
 
 def collision(x,y,xf,yf,xt,yt,ecart,son_gameover):
     if x + xf > xt+20:
@@ -80,8 +84,40 @@ def collision(x,y,xf,yf,xt,yt,ecart,son_gameover):
             if x-xf < xt + 150-20:
                 message("Game over",surfaceL,surfaceH,son_gameover)
 
-def gravity(y, gravity = 0.2):
+def gravity(y, gravity = 0.2): # gravity = 0.2 : paramètre facultatif car déjà initialisé 
     return y + gravity
+
+
+def difficulte(score,tv):
+    if score >= 3:
+        tv = score
+        score +=1
+    elif score >= 10:
+        tv = 10
+    return tv
+
+
+def menu():
+    fond_menu = pygame.image.load("fondflappy.png")
+    play = 0
+    continuer = True
+
+    while continuer:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                continuer = False
+                play = 0
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                play = 1
+                continuer = False
+
+        surface.blit(fond_menu, (0, 0))
+        pygame.display.flip()
+    if play == 1:
+            return main()
+    else:
+        pygame.quit()
+        quit()
 
 def main(): 
     fond = pygame.image.load("fondflappy.png")
@@ -113,12 +149,10 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     son_saut.play() 
-                    if y > -5:
+                    if y > -5: # si le joueur est au dessus de l'écran on peut plus le faire sauter
                         y_mouv = -5
                         rotate_flappy = 45
-                    
-            #if event.type == pygame.KEYUP:
-            #    y_mouv = 3
+
         y += y_mouv
 
         if y>surfaceH-75: #2 bords en hauteur
@@ -127,32 +161,26 @@ def main():
         if x_tuyau < (0):
             x_tuyau =  surfaceL
             y_tuyau = random.randint(-400,-280)
-            score +=1
-            if score >= 3:
-                ecart = 2*y_flappy
-                tuyau_vitesse = score
-                if score >= 10:
-                    tuyau_vitesse = 10
-        if x_tuyau == x:
-            son_tuyau.play()
-
+    
+        
         surface.blit(fond,(0,0))         
         flappy(x,y, oiseau, rotate_flappy)
         tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau, ecart)
         x_tuyau -= tuyau_vitesse # bouge de 6 pixels
-        Score(score,x_tuyau)
+        score = Score(score,x_tuyau,x,son_tuyau)
         collision(x,y,x_flappy,y_flappy,x_tuyau,y_tuyau,ecart,son_gameover)
+        #tuyau_vitesse = difficulte(score,tuyau_vitesse)
 
         if x_bord < -339 :
             x_bord = 16
         bord_defile(bord,x_bord,y_bord)
         x_bord -= tuyau_vitesse
-        rotate_flappy -= 0.8
-        y_mouv = gravity(y_mouv)
+        rotate_flappy -= 0.8 # on augmente l'angle de rotation
+        y_mouv = gravity(y_mouv) # On augmente la vitesse de la chute à chaque tour de boucle
         pygame.display.update() #rafraichissement
         
         
         
-main()
+menu()
 pygame.quit()
 quit()
