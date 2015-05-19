@@ -4,6 +4,9 @@ Created on Thu May 14 21:31:35 2015
 
 @author: Thomas Rodriguez et Maxime Thibert
 
+Pour jouer, appuyez une fois sur ESPACE (nouvelle partie ou si vous mourrez)
+Une seule touche est nécéssaire pour voler : la touche ESPACE.
+
 """
 import pygame
 import time
