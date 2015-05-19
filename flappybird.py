@@ -18,18 +18,15 @@ horloge = pygame.time.Clock()
 
 
 
-def flappy(x,y,oiseau):
+def flappy(x,y,oiseau, rotate):
 
+    oiseau = pygame.transform.rotate(oiseau, rotate)
     surface.blit(oiseau,(x,y))
 
 
 def tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau,ecart): 
     surface.blit(tuyau,(x_tuyau,y_tuyau))
     surface.blit (tuyau_bas,(x_tuyau,y_tuyau+509+ecart)) #509pix = taille tuyau
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
 
 def bord_defile(bord,x_bord,y_bord):
     surface.blit(bord,(x_bord,y_bord))
@@ -43,28 +40,27 @@ def message(texte,surfaceL,surfaceH,son_gameover):
     surface.blit(gameoversurface, gameoverRect)
     son_gameover.play()
     pygame.display.update()
-    time.sleep(2)
-    while rejoueOUquitte() == None:   #tant que RoQ renvoie a rien
-        horloge.tick()              #bloque tout
+    rejoueQuit()
 
     
     
 def creaTexte(texte, police):
     white = (255,255,255)
-    textesurface = police.render(texte, True, white)
+    textesurface = police.render(texte, True, white) # true : antialiasing
     return textesurface, textesurface.get_rect()
 
 
-def rejoueOUquitte():
-    for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP, pygame.QUIT]):
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            quit()
-        elif event.type == pygame.KEYUP:
-            continue
-        return event.key
-    return None
 
+def rejoueQuit():
+    time.sleep(1)
+    play = True
+    while play:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                main()
 
 def Score(score,x_tuyau):
     black = (0, 0, 0)    
@@ -73,31 +69,19 @@ def Score(score,x_tuyau):
     #conversion en string pr concatener
     surface.blit(textesurface, [0, 0])
 
-    
-<<<<<<< HEAD
 def collision(x,y,xf,yf,xt,yt,ecart,son_gameover):
     if x + xf > xt+20:
         if y < yt + 509-20:
             if x-xf < xt + 150-20:
                 message("Game over",surfaceL,surfaceH,son_gameover)
 
-=======
-def collision(x,y,xf,yf,xt,yt,ecart):
-    if x + xf > xt+20:
-        if y < yt + 509-20:
-            if x-xf < xt + 150-20:
-                message("Game over",surfaceL,surfaceH)
->>>>>>> origin/master
-    
     if x + xf > xt+20:
         if y + yf > yt + 509+ecart+20:
             if x-xf < xt + 150-20:
-<<<<<<< HEAD
                 message("Game over",surfaceL,surfaceH,son_gameover)
 
-=======
-                message("Game over",surfaceL,surfaceH)
->>>>>>> origin/master
+def gravity(y, gravity = 0.2):
+    return y + gravity
 
 def main(): 
     fond = pygame.image.load("fondflappy.png")
@@ -107,9 +91,10 @@ def main():
     tuyau_bas =  pygame.transform.rotate(tuyau, 180)
     x_flappy = 68
     y_flappy = 50
+    rotate_flappy = 0
     x = 150
     y = 200
-    y_mouv = 0
+    y_mouv = -5
     x_tuyau = surfaceL
     y_tuyau = random.randint(-400,-280)
     ecart = 3*y_flappy
@@ -127,18 +112,17 @@ def main():
                 game_over = True 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    son_saut.play()
-                    y_mouv = -5
+                    son_saut.play() 
+                    if y > -5:
+                        y_mouv = -5
+                        rotate_flappy = 45
                     
-            if event.type == pygame.KEYUP:
-                y_mouv = 3
+            #if event.type == pygame.KEYUP:
+            #    y_mouv = 3
         y += y_mouv
-        if y>surfaceH-75 or y <-5: #2 bords en hauteur
-<<<<<<< HEAD
+
+        if y>surfaceH-75: #2 bords en hauteur
             message("Game over",surfaceL,surfaceH,son_gameover)
-=======
-            message("Game over",surfaceL,surfaceH)
->>>>>>> origin/master
         
         if x_tuyau < (0):
             x_tuyau =  surfaceL
@@ -149,26 +133,22 @@ def main():
                 tuyau_vitesse = score
                 if score >= 10:
                     tuyau_vitesse = 10
-<<<<<<< HEAD
         if x_tuyau == x:
             son_tuyau.play()
-=======
-                
->>>>>>> origin/master
+
         surface.blit(fond,(0,0))         
-        flappy(x,y, oiseau)
+        flappy(x,y, oiseau, rotate_flappy)
         tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau, ecart)
         x_tuyau -= tuyau_vitesse # bouge de 6 pixels
         Score(score,x_tuyau)
-<<<<<<< HEAD
         collision(x,y,x_flappy,y_flappy,x_tuyau,y_tuyau,ecart,son_gameover)
-=======
-        collision(x,y,x_flappy,y_flappy,x_tuyau,y_tuyau,ecart)
->>>>>>> origin/master
+
         if x_bord < -339 :
             x_bord = 16
         bord_defile(bord,x_bord,y_bord)
         x_bord -= tuyau_vitesse
+        rotate_flappy -= 0.8
+        y_mouv = gravity(y_mouv)
         pygame.display.update() #rafraichissement
         
         
