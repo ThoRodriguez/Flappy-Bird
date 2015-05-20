@@ -33,7 +33,9 @@ def tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau,ecart):
 
 def bord_defile(bord,x_bord,y_bord):
     surface.blit(bord,(x_bord,y_bord))
-
+    if x_bord < -339 :
+        x_bord = 16
+    return x_bord
 
 def message(texte,surfaceL,surfaceH,son_gameover):
     gameover = pygame.font.Font("04b.ttf",140)
@@ -62,7 +64,7 @@ def rejoueQuit():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE: # Si espace : rejouer
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE: 
                 main()
 
 def Score(score,x_tuyau,x,son):
@@ -87,21 +89,20 @@ def collision(x,y,xf,yf,xt,yt,ecart,son_gameover):
             if x-xf < xt + 150-20:
                 message("Game over",surfaceL,surfaceH,son_gameover)
 
-def gravity(y, gravity = 0.2): # gravity = 0.2 : paramètre facultatif car déjà initialisé 
+def gravity(y, gravity = 0.2):#gravity:paramètre facultatif car déjà initialisé 
     return y + gravity
 
 
 def difficulte(score,tv):
     if score >= 3:
         tv = score
-        score +=1
     elif score >= 10:
         tv = 10
     return tv
 
 
 def menu():
-    fond_menu = pygame.image.load("fondflappy.png")
+    fond_menu = pygame.image.load("menu.jpg")
     play = 0
     continuer = True
 
@@ -152,7 +153,8 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     son_saut.play() 
-                    if y > -5: # si le joueur est au dessus de l'écran on peut plus le faire sauter
+                    if y > -5: 
+        # si le joueur est au dessus de l'écran on peut plus le faire sauter
                         y_mouv = -5
                         rotate_flappy = 45
 
@@ -174,12 +176,12 @@ def main():
         collision(x,y,x_flappy,y_flappy,x_tuyau,y_tuyau,ecart,son_gameover)
         #tuyau_vitesse = difficulte(score,tuyau_vitesse)
 
-        if x_bord < -339 :
-            x_bord = 16
-        bord_defile(bord,x_bord,y_bord)
+        
+        x_bord = bord_defile(bord,x_bord,y_bord)
         x_bord -= tuyau_vitesse
         rotate_flappy -= 0.8 # on augmente l'angle de rotation
-        y_mouv = gravity(y_mouv) # On augmente la vitesse de la chute à chaque tour de boucle
+        y_mouv = gravity(y_mouv) 
+        # On augmente la vitesse de la chute à chaque tour de boucle
         pygame.display.update() #rafraichissement
         
         
