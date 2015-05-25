@@ -3,8 +3,15 @@
 """
 Created on Thu May 14 21:31:35 2015
 @author: Thomas Rodriguez et Maxime Thibert
+<<<<<<< HEAD
 Pour jouer, appuyez une fois sur ESPACE (nouvelle partie ou si vous mourrez)
 Une seule touche est nécéssaire pour voler : la touche ESPACE.
+=======
+
+Pour jouer, appuyez une fois sur ESPACE (nouvelle partie ou si vous mourrez)
+Une seule touche est nécéssaire pour voler : la touche ESPACE.
+
+>>>>>>> origin/master
 """
 
 
@@ -47,9 +54,16 @@ def tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau,ecart):
     surface.blit(tuyau,(x_tuyau,y_tuyau))
     surface.blit (tuyau_bas,(x_tuyau,y_tuyau+509+ecart)) #509pix = taille tuyau
     
+<<<<<<< HEAD
 
 def bord_defile(bord,x_bord,y_bord):
     """
+=======
+
+
+def bord_defile(bord,x_bord,y_bord):
+    '''
+>>>>>>> origin/master
     Fonction qui permet de replacer le sol à sa position de départ après
     avoir défilé
     ---
@@ -62,11 +76,16 @@ def bord_defile(bord,x_bord,y_bord):
     ---
     Retourne un entier (coordonnée x du sol)
     
+<<<<<<< HEAD
     """
+=======
+    '''
+>>>>>>> origin/master
     surface.blit(bord,(x_bord,y_bord))
     if x_bord < -339 :
         x_bord = 16
     return x_bord
+<<<<<<< HEAD
 
 
 def message(texte,surfaceL,surfaceH,son_gameover):
@@ -79,6 +98,14 @@ def message(texte,surfaceL,surfaceH,son_gameover):
     surfaceL: int 
     son_gameover: sound/music
     """
+=======
+
+def message(texte,surfaceL,surfaceH,son_gameover):
+    '''
+    Fonction qui affiche le message Game over et appelle la fonction
+    rejoueQuit 
+    '''
+>>>>>>> origin/master
     gameover = pygame.font.Font("04b.ttf",140)
     gameoversurface, gameoverRect = creaTexte(texte, gameover) #contient 1 
                                                            #texte et 1 police
@@ -100,9 +127,15 @@ def creaTexte(texte, police):
 
 
 def rejoueQuit():
+<<<<<<< HEAD
     """
     Fonction qui permet de relancer la partie ou quitter
     """
+=======
+    '''
+    Fonction qui permet de relancer la partie ou quitter
+    '''
+>>>>>>> origin/master
     time.sleep(1)
     play = True
     while play:
@@ -113,9 +146,14 @@ def rejoueQuit():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE: 
                 main()
 
+<<<<<<< HEAD
 
 def Score(score,x_tuyau,x,son):
     black = (0, 0, 0)
+=======
+def Score(score,x_tuyau,x,son):
+    black = (0, 0, 0)    
+>>>>>>> origin/master
     font = pygame.font.Font(None ,50)
     textesurface = font.render(("Score: "+str(score)), True, black)
     #conversion en string pr concatener
@@ -124,16 +162,25 @@ def Score(score,x_tuyau,x,son):
         if x_tuyau == x+1 or x_tuyau == x-1  :
             son.play()
             score +=1
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> origin/master
     if (5 <= score <10):
         if (x_tuyau == x+5):
             son.play()
             score +=1
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> origin/master
     if (score >= 10):
         if (x_tuyau == x+10):
             son.play()
             score +=1
+<<<<<<< HEAD
 
     return score
 
@@ -144,13 +191,29 @@ def collision(x,y,xf,yf,xt,yt,ecart,son_gameover):
     ---
     Paramètres : 
     x, y, xf, yf, xt, yt, ecart : int
+=======
+            
+    return score
+
+def collision(x,y,xf,yf,xt,yt,ecart,son_gameover):
+    '''
+    Fonction qui gère les collisions
+    ---
+    Paramètres : 
+    x,y,xf,yf,xt,yt,ecart : int
+>>>>>>> origin/master
     
     son_gameover : fichier son
     ---
     Vérifie les différentes conditions pour perdre au jeu et appelle
     la fonction message() si une d'elles vérifiée
+<<<<<<< HEAD
     """
     
+=======
+    
+    '''
+>>>>>>> origin/master
     if x + xf > xt+20:
         if y < yt + 509-20:
             if x-xf < xt + 150-20:
@@ -171,7 +234,11 @@ def gravity(y, gravity = 0.2):#gravity:paramètre facultatif car déjà initiali
 
 
 def difficulte(score,tv):
+<<<<<<< HEAD
     """
+=======
+    '''
+>>>>>>> origin/master
     Fonction qui gère la difficulté (simule les levels)
     ---
     Paramètres :
@@ -179,8 +246,13 @@ def difficulte(score,tv):
     tv : int
     ---
     Retourne : int
+<<<<<<< HEAD
     """
     
+=======
+    
+    '''
+>>>>>>> origin/master
     if score >= 5:
         tv = 5
     if score >= 10:
@@ -189,13 +261,21 @@ def difficulte(score,tv):
 
 
 def menu():
+<<<<<<< HEAD
     """
+=======
+    '''
+>>>>>>> origin/master
     Fonction qui affiche le menu, ne lance le jeu que si on appuie sur
     la barre espace (et appelle ainsi la fonction main)
     Arguments : 
     fond_menu : img
     play et continuer : rôle de booléens
+<<<<<<< HEAD
     """
+=======
+    '''
+>>>>>>> origin/master
     fond_menu = pygame.image.load("menu.jpg")
     play = 0
     continuer = True
@@ -217,7 +297,10 @@ def menu():
         pygame.quit()
         quit()
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
 def main(): 
     fond = pygame.image.load("fondflappy.png")
     oiseau = pygame.image.load("flappy2.png")
