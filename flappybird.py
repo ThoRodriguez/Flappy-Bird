@@ -23,21 +23,41 @@ horloge = pygame.time.Clock()
 
 def flappy(x,y,oiseau, rotate):
 
-    oiseau = pygame.transform.rotate(oiseau, rotate) # on effectue une rotation sur l'image du joueur
+    oiseau = pygame.transform.rotate(oiseau, rotate)
     surface.blit(oiseau,(x,y))
 
 
 def tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau,ecart): 
     surface.blit(tuyau,(x_tuyau,y_tuyau))
     surface.blit (tuyau_bas,(x_tuyau,y_tuyau+509+ecart)) #509pix = taille tuyau
+    
+
 
 def bord_defile(bord,x_bord,y_bord):
+    '''
+    Fonction qui permet de replacer le sol à sa position de départ après
+    avoir défilé
+    ---
+    Paramètres :
+    
+    bord : img
+    x_bord : int
+    y_bord : int
+    Valeurs calculées pour un défilement fluide
+    ---
+    Retourne un entier (coordonnée x du sol)
+    
+    '''
     surface.blit(bord,(x_bord,y_bord))
     if x_bord < -339 :
         x_bord = 16
     return x_bord
 
 def message(texte,surfaceL,surfaceH,son_gameover):
+    '''
+    Fonction qui affiche le message Game over et appelle la fonction
+    rejoueQuit 
+    '''
     gameover = pygame.font.Font("04b.ttf",140)
     gameoversurface, gameoverRect = creaTexte(texte, gameover) #contient 1 
                                                            #texte et 1 police
@@ -57,6 +77,9 @@ def creaTexte(texte, police):
 
 
 def rejoueQuit():
+    '''
+    Fonction qui permet de relancer la partie ou quitter
+    '''
     time.sleep(1)
     play = True
     while play:
@@ -73,12 +96,36 @@ def Score(score,x_tuyau,x,son):
     textesurface = font.render(("Score: "+str(score)), True, black) 
     #conversion en string pr concatener
     surface.blit(textesurface, [0, 0])
-    if x_tuyau == x:
-        son.play()
-        score +=1
+    if (score < 5):
+        if x_tuyau == x+1 or x_tuyau == x-1  :
+            son.play()
+            score +=1
+        
+    if (5 <= score <10):
+        if (x_tuyau == x+5):
+            son.play()
+            score +=1
+            
+    if (score >= 10):
+        if (x_tuyau == x+10):
+            son.play()
+            score +=1
+            
     return score
 
 def collision(x,y,xf,yf,xt,yt,ecart,son_gameover):
+    '''
+    Fonction qui gère les collisions
+    ---
+    Paramètres : 
+    x,y,xf,yf,xt,yt,ecart : int
+    
+    son_gameover : fichier son
+    ---
+    Vérifie les différentes conditions pour perdre au jeu et appelle
+    la fonction message() si une d'elles vérifiée
+    
+    '''
     if x + xf > xt+20:
         if y < yt + 509-20:
             if x-xf < xt + 150-20:
@@ -89,19 +136,41 @@ def collision(x,y,xf,yf,xt,yt,ecart,son_gameover):
             if x-xf < xt + 150-20:
                 message("Game over",surfaceL,surfaceH,son_gameover)
 
+
+    if y>surfaceH-75: 
+            message("Game over",surfaceL,surfaceH,son_gameover)
+
+
 def gravity(y, gravity = 0.2):#gravity:paramètre facultatif car déjà initialisé 
     return y + gravity
 
 
 def difficulte(score,tv):
-    if score >= 3:
-        tv = score
-    elif score >= 10:
+    '''
+    Fonction qui gère la difficulté (simule les levels)
+    ---
+    Paramètres :
+    score : int
+    tv : int
+    ---
+    Retourne : int
+    
+    '''
+    if score >= 5:
+        tv = 5
+    if score >= 10:
         tv = 10
     return tv
 
 
 def menu():
+    '''
+    Fonction qui affiche le menu, ne lance le jeu que si on appuie sur
+    la barre espace (et appelle ainsi la fonction main)
+    Arguments : 
+    fond_menu : img
+    play et continuer : rôle de booléens
+    '''
     fond_menu = pygame.image.load("menu.jpg")
     play = 0
     continuer = True
@@ -127,8 +196,8 @@ def main():
     fond = pygame.image.load("fondflappy.png")
     oiseau = pygame.image.load("flappy2.png")
     tuyau = pygame.image.load("tuyau.png")
-    bord = pygame.image.load("bord.png")
     tuyau_bas =  pygame.transform.rotate(tuyau, 180)
+    bord = pygame.image.load("bord.png")
     x_flappy = 68
     y_flappy = 50
     rotate_flappy = 0
@@ -138,7 +207,7 @@ def main():
     x_tuyau = surfaceL
     y_tuyau = random.randint(-400,-280)
     ecart = 3*y_flappy
-    tuyau_vitesse = 2
+    tuyau_vitesse = 3
     score = 0
     x_bord = 16
     y_bord = 470
@@ -160,21 +229,21 @@ def main():
 
         y += y_mouv
 
-        if y>surfaceH-75: #2 bords en hauteur
-            message("Game over",surfaceL,surfaceH,son_gameover)
         
         if x_tuyau < (0):
             x_tuyau =  surfaceL
             y_tuyau = random.randint(-400,-280)
     
+
         
         surface.blit(fond,(0,0))         
         flappy(x,y, oiseau, rotate_flappy)
         tuyaux(tuyau,tuyau_bas,x_tuyau,y_tuyau, ecart)
-        x_tuyau -= tuyau_vitesse # bouge de 6 pixels
+        x_tuyau -= tuyau_vitesse
+
         score = Score(score,x_tuyau,x,son_tuyau)
         collision(x,y,x_flappy,y_flappy,x_tuyau,y_tuyau,ecart,son_gameover)
-        #tuyau_vitesse = difficulte(score,tuyau_vitesse)
+        tuyau_vitesse = difficulte(score,tuyau_vitesse)
 
         
         x_bord = bord_defile(bord,x_bord,y_bord)
