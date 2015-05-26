@@ -196,7 +196,7 @@ def menu():
     fond_menu : img
     play et continuer : rôle de booléens
     """
-    fond_menu = pygame.image.load("menu.jpg")
+    fond_menu = pygame.image.load("./Pictures/menu.jpg")
     play = 0
     continuer = True
 
@@ -219,11 +219,11 @@ def menu():
 
 
 def main(): 
-    fond = pygame.image.load("fondflappy.png")
-    oiseau = pygame.image.load("flappy2.png")
-    tuyau = pygame.image.load("tuyau.png")
+    fond = pygame.image.load("./Pictures/fondflappy.png")
+    oiseau = pygame.image.load("./Pictures/flappy2.png")
+    tuyau = pygame.image.load("./Pictures/tuyau.png")
     tuyau_bas =  pygame.transform.rotate(tuyau, 180)
-    bord = pygame.image.load("bord.png")
+    bord = pygame.image.load("./Pictures/bord.png")
     x_flappy = 68
     y_flappy = 50
     rotate_flappy = 0
@@ -237,9 +237,9 @@ def main():
     score = 0
     x_bord = 16
     y_bord = 470
-    son_saut = pygame.mixer.Sound("saut.wav")
-    son_tuyau = pygame.mixer.Sound("tuyau.wav")
-    son_gameover = pygame.mixer.Sound("gameover.wav")
+    son_saut = pygame.mixer.Sound("./Sounds/saut.wav")
+    son_tuyau = pygame.mixer.Sound("./Sounds/tuyau.wav")
+    son_gameover = pygame.mixer.Sound("./Sounds/gameover.wav")
     game_over = False
     while (game_over == False) :  #quitter boucle inf
         for event in pygame.event.get(): #recherche parmi evenements
